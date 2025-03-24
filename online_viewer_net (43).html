@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic 8 Ball</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        input, button {
+            width: 200px;
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            background-color: cyan;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .ball {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #000 60%, #222);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: absolute;
+            top: 75%; /* Moved it further down */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            transition: transform 0.1s;
+            background: #000;
+            background: radial-gradient(circle, #222 30%, #000);
+            border: 5px solid #888;
+        }
+        .ball::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            right: 10%;
+            bottom: 10%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0% { transform: translate(2px, 2px) rotate(0deg); }
+            20% { transform: translate(-2px, -2px) rotate(-2deg); }
+            40% { transform: translate(2px, -2px) rotate(2deg); }
+            60% { transform: translate(-2px, 2px) rotate(-2deg); }
+            80% { transform: translate(2px, 2px) rotate(2deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        .answer {
+            position: absolute;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            width: 80%;
+            color: cyan;
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: white;
+            border-radius: 50%;
+            animation: moveStar 10s linear infinite;
+        }
+        @keyframes moveStar {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(var(--x), var(--y));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Magic 8 Ball</h1>
+        <input type="text" id="question" placeholder="Type your question...">
+        <button onclick="shakeBall()">Ask</button>
+    </div>
+    <div class="ball" id="magicBall">
+        <div class="answer" id="answer">Ask me a question</div>
+    </div>
+
+    <script>
+        const numStars = 100; // Number of stars
+        for (let i = 0; i < numStars; i++) {
+            let star = document.createElement("div");
+            star.classList.add("star");
+
+            let x = Math.random() * window.innerWidth;
+            let y = Math.random() * window.innerHeight;
+
+            star.style.left = `${x}px`;
+            star.style.top = `${y}px`;
+
+            let moveX = Math.random() * 100 - 50;
+            let moveY = Math.random() * 100 - 50;
+
+            star.style.setProperty('--x', `${moveX}px`);
+            star.style.setProperty('--y', `${moveY}px`);
+
+            document.body.appendChild(star);
+        }
+
+        function shakeBall() {
+            let question = document.getElementById("question").value.trim().toLowerCase();
+            if (!question) {
+                alert("Please type a question first!");
+                return;
+            }
+            
+            const answers = [
+                "Yes", "No", "Maybe", "Ask again later", "Definitely", "I don't think so",
+                "Absolutely", "Not in a million years", "Try again", "Signs point to yes"
+            ];
+            
+            let ball = document.getElementById("magicBall");
+            let answerElement = document.getElementById("answer");
+            answerElement.textContent = "...";
+            
+            ball.classList.add("shake");
+            
+            setTimeout(() => {
+                ball.classList.remove("shake");
+                if (question.includes("wills") && question.includes("gay")) {
+                    answerElement.textContent = "Absolutely";
+                } else {
+                    let randomIndex = Math.floor(Math.random() * answers.length);
+                    answerElement.textContent = answers[randomIndex];
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
